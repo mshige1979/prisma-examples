@@ -10,10 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+// ER図作成用
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../doc/ERD.md"
+}
 
+// ユーザーデータ管理用
+model User {
+  // ID
+  id    Int     @id @default(autoincrement())
+  // メールアドレス
+  email String  @unique
+  // 氏名
+  name  String?
+  // 年齢
+  age   Int?
+
+  // 登録日時
+  createdAt DateTime @default(now()) @map("created_at")
+  // 更新日時
+  updatedAt DateTime @default(now()) @map("updated_at")
+
+  // テーブルの物理名
   @@map("users")
 }
