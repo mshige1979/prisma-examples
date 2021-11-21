@@ -21,6 +21,13 @@ services:
     # 環境変数
     environment:
       TZ: "Asia/Tokyo"
+    # ポート開放
+    ports:
+      - 3000:3000
+    restart: always
+    # 起動コマンド
+    command: >
+      npm start
 
   # DBサーバ
   db:
