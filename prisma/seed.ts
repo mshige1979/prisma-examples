@@ -12,6 +12,13 @@ const userData: Prisma.UserCreateInput[] = [
                 nickName: "aaaa"
             }
         },
+        posts: {
+            create: [
+                { title: "test1" },
+                { title: "test2" },
+                { title: "test3" },
+            ]
+        }
     },
     {
         name: 'hoge2',
@@ -26,9 +33,20 @@ const userData: Prisma.UserCreateInput[] = [
 ]
 
 const transfer = async () => {
-    const users = [];
+    const queryList = [];
 
     // 削除用データ取得
+    const postAll = await prisma.post.findMany()
+    postAll.map((post) => {
+        // 削除
+        const deletePost = prisma.post.deleteMany({
+            where: {
+                id: post.id,  
+            },            
+        })
+        queryList.push(deletePost);
+    })
+
     const profileAll = await prisma.profile.findMany()
     profileAll.map((profile) => {
         // 削除
@@ -37,7 +55,7 @@ const transfer = async () => {
                 id: profile.id,  
             },            
         })
-        users.push(deleteProfile);
+        queryList.push(deleteProfile);
     })
 
     const userAll = await prisma.user.findMany()
@@ -48,7 +66,7 @@ const transfer = async () => {
                 id: user.id,  
             },            
         })
-        users.push(deleteUser);
+        queryList.push(deleteUser);
     })
 
     // 登録用データ設定
@@ -56,9 +74,9 @@ const transfer = async () => {
         const user = prisma.user.create({
             data: u,
         })
-        users.push(user);
+        queryList.push(user);
     }
-    return await prisma.$transaction(users);
+    return await prisma.$transaction(queryList);
 }
 
 // 定義されたデータを実際のモデルへ登録する処理

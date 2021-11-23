@@ -17,5 +17,14 @@ erDiagram
     DateTime updated_at
     }
   
+
+  posts {
+      Int id
+    String title
+    DateTime created_at
+    DateTime updated_at
+    }
+  
     profile o|--|| users : "users"
+    posts o{--|| users : "users"
 ```

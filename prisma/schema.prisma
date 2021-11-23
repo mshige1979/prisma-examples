@@ -34,6 +34,8 @@ model User {
 
   // プロフィール(One to One)
   profile Profile?
+  // 記事(One to Many)
+  posts   Post[]
 
   // テーブルの物理名
   @@map("users")
@@ -57,4 +59,23 @@ model Profile {
 
   // テーブルの物理名
   @@map("profile")
+}
+
+// 記事管理用
+model Post {
+  // ID
+  id    Int    @id @default(autoincrement())
+  // タイトル
+  title String @map("title")
+  // 登録日時
+  createdAt DateTime @default(now()) @map("created_at")
+  // 更新日時
+  updatedAt DateTime @default(now()) @map("updated_at")
+  
+  // 親テーブルの関連づけ
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  // テーブルの物理名
+  @@map("posts")
 }

@@ -1,6 +1,6 @@
 # prisma-examples
 
-## リレーション確認用
+## リレーション確認用2
 
 ### git clone
 
@@ -12,7 +12,7 @@ git clone https://github.com/mshige1979/prisma-examples.git
 
 ```
 cd prisma-examples
-git checkout -b relation1 origin/relation1
+git checkout -b relation1 origin/relation2
 ```
 
 ### docker build
@@ -39,4 +39,9 @@ docker-compose run --rm backend npx prisma migrate deploy
 
 ```
 docker-compose run --rm backend npx prisma db seed
+```
+
+### テスト実行
+```
+docker-compose run --rm backend npx ts-node ./src/index.ts
 ```
