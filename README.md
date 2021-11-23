@@ -34,3 +34,9 @@ docker-compose run --rm backend npm install
 ```
 docker-compose run --rm backend npx prisma migrate deploy
 ```
+
+### データ投入
+
+```
+docker-compose run --rm backend npx prisma db seed
+```

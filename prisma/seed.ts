@@ -7,6 +7,11 @@ const userData: Prisma.UserCreateInput[] = [
         name: 'hoge1',
         email: 'hoge1@example.com',
         age: 20,
+        profile: {
+            create: {
+                nickName: "aaaa"
+            }
+        },
     },
     {
         name: 'hoge2',
@@ -24,15 +29,26 @@ const transfer = async () => {
     const users = [];
 
     // 削除用データ取得
+    const profileAll = await prisma.profile.findMany()
+    profileAll.map((profile) => {
+        // 削除
+        const deleteProfile = prisma.profile.deleteMany({
+            where: {
+                id: profile.id,  
+            },            
+        })
+        users.push(deleteProfile);
+    })
+
     const userAll = await prisma.user.findMany()
     userAll.map((user) => {
         // 削除
-        const deleteUsser = prisma.user.deleteMany({
+        const deleteUser = prisma.user.deleteMany({
             where: {
-                id: user.id
-            }
+                id: user.id,  
+            },            
         })
-        users.push(deleteUsser);
+        users.push(deleteUser);
     })
 
     // 登録用データ設定

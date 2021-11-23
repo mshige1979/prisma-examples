@@ -1,111 +1,59 @@
-import express from 'express'
-
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-// express server
-const app = express()
-
-// リクエストデータをjsonで受け取れるようにする
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-
-// ユーザー一覧
-app.get('/users', async (req, res) => {
-    // ユーザー一覧を取得
-    const users = await prisma.user.findMany({})
-
-    // 返却
-    res.json(users)
-})
-
-// ユーザー詳細
-app.get('/user/:id', async (req, res) => {
-    // パラメータを取得
-    const { id } = req.params;
-    // ユーザー情報を取得
-    const user = await prisma.user.findFirst({
+const main = async () => {
+    // ユーザーのみ
+    const user1 = await prisma.user.findFirst({
         where: {
-            id: Number(id)
-        }
-    })
-
-    // 返却
-    res.json(user)
-})
-
-// ユーザー登録
-app.post('/user', async (req, res) => {
-    // パラメータ取得
-    console.log(req.body);
-    const { email, name } = req.body;
-
-    // この辺でバリデーション
-
-    // 登録
-    const user = await prisma.user.create({
-        data: {
-            "email": email,
-            "name": name
-        }
-    })
-
-    // 返却
-    res.json({
-        "status": 0,
-        "result": user
-    })
-})
-
-// ユーザー更新
-app.put('/user/:id', async (req, res) => {
-    // パラメータ取得
-    console.log(req.body);
-    const { id } = req.params;
-    const { email, name } = req.body;
-
-    // この辺でバリデーション
-
-
-    // 登録
-    const user = await prisma.user.update({
-        where: {
-            "id": Number(id)
+            name: 'hoge1'
         },
-        data: {
-            "email": email,
-            "name": name,
-            "updatedAt": new Date()
-        }
-    })
+    })    
+    console.log("case1: ", user1)
 
-    // 返却
-    res.json({
-        "status": 0,
-        "result": user
-    })
-})
-
-
-// ユーザー削除
-app.delete('/user/:id', async (req, res) => {
-    // パラメータを取得
-    const { id } = req.params;
-    // ユーザー情報を削除
-    const user = await prisma.user.deleteMany({
+    // ユーザー + プロフィール
+    const user2 = await prisma.user.findFirst({
         where: {
-            id: Number(id)
-        }
-    })
+            name: 'hoge1'
+        },
+        include: {
+            profile: true,
+        },
+    })    
+    console.log("case2: ", user2)
 
-    // 返却
-    // 返却
-    res.json({
-        "status": 0,
-        "result": user
+    // ユーザー + プロフィール条件指定
+    // hasOneの場合は子の条件の指定は不可能
+    const user3 = await prisma.user.findFirst({
+        where: {
+            name: 'hoge1'
+        },
+        include: {
+            profile: {
+                select: {
+                    nickName: true,
+                    createdAt: true,
+                },
+            },
+        },
+    })    
+    console.log("case3: ", user3)
+
+    // プロフィール + ユーザー
+    const profile1 = prisma.profile.findFirst({
+        where: {
+            nickName: 'aaaa'
+        },
+    });
+    const user4 = await profile1.user();
+    profile1.then((result) => {
+        console.log("case4: ", result, user4);
     })
+}
+
+main().catch((e) => {
+    throw e;
+    
+}).finally(async () => {
+    await prisma.$disconnect();
+    
 })
-
-
-// server listen
-const server = app.listen(3000)
