@@ -21,6 +21,7 @@ services:
     # 環境変数
     environment:
       TZ: "Asia/Tokyo"
+      DATABASE_URL: "mysql://root:password@db:3306/sample1"
     # ポート開放
     ports:
       - 3000:3000

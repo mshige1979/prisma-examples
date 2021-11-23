@@ -13,8 +13,7 @@ datasource db {
 // ER図作成用
 generator erd {
   provider = "prisma-erd-generator"
-  output   = "../doc/ERD.svg"
-  theme    = "forest"
+  output   = "../doc/ERD.md"
 }
 
 // ユーザーデータ管理用
