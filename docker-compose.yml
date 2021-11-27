@@ -7,17 +7,17 @@ services:
     # コンテナ名
     container_name: node-dev
     # build
-    image: node:16
-    # コンテナの中に入る
-    tty: true
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile
     # 他のコンテナ起動後に起動するように制御
     depends_on:
       - db
     # ボリューム
     volumes:
-      - ".:/app"
+      - ".:/home/app/backend"
     # WORKDIR
-    working_dir: /app
+    working_dir: /home/app/backend
     # 環境変数
     environment:
       TZ: "Asia/Tokyo"
@@ -29,6 +29,14 @@ services:
     # 起動コマンド
     command: >
       npm start
+    # ユーザー
+    user: "app:app"
+    # debug用
+    tty: true
+    stdin_open: true
+    # 権限追加
+    cap_add:
+      - ALL
 
   # DBサーバ
   db:

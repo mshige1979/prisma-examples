@@ -13,7 +13,7 @@ datasource db {
 // ER図作成用
 generator erd {
   provider = "prisma-erd-generator"
-  output   = "../doc/ERD.md"
+  output   = "../doc/ERD.svg"
 }
 
 // ユーザーデータ管理用
@@ -64,14 +64,14 @@ model Profile {
 // 記事管理用
 model Post {
   // ID
-  id    Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   // タイトル
-  title String @map("title")
+  title     String   @map("title")
   // 登録日時
   createdAt DateTime @default(now()) @map("created_at")
   // 更新日時
   updatedAt DateTime @default(now()) @map("updated_at")
-  
+
   // 親テーブルの関連づけ
   userId Int
   user   User @relation(fields: [userId], references: [id])
